@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=100%, initial-scale=1.0">
+    <title>Math Question Generator</title>
+
+    <link rel='stylesheet' href='resource/css/bootstrap.min.css'/>
+    <!--<script src="resource/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="resource/js/jquery-3.6.0.min.js" type="text/javascript"></script>-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <form id="mainForm" style="margin:10px 10px;" class="d-print-none">
+        <div class="input-group w-50">
+            <span class="input-group-text">請選擇題數 </span>
+            <select id="numOfQuestion" class="form-select" aria-label="Default Select">
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+            </select>
+        </div>
+        <br>
+        <div class="input-group w-50">
+            <span class="input-group-text">請選擇位數 </span>
+            <select id="lenOfVariable" class="form-select" aria-label="Default Select">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-text">選擇題型 </span>
+            <input id="add" class="form-check-input" type="checkbox" name="qStyle" value="0">
+            <label for="add" class="form-check-label">加法</label>
+            <input id="minus" class="form-check-input" type="checkbox" name="qStyle" value="1">
+            <label for="minus" class="form-check-label">減法</label>
+            <input id="multiple" class="form-check-input" type="checkbox" name="qStyle" value="2">
+            <label for="multiple" class="form-check-label">乘法</label>
+            <input id="divide" class="form-check-input" type="checkbox" name="qStyle" value="3">
+            <label for="divide" class="form-check-label">除法</label>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary text-center" style="width:100px;">送出</button>
+                <input type="checkbox" id="chkAnswer" name="chkAnswer" class="form-check-input">
+                <label for="chkAnswer" class="form-check-label">答案?</label> 
+            </div>
+        </div>
+        
+    </form>
+    <div id="layout" class="container">
+
+    </div>
+</body>
+</html>
+
+<script>
+    function equationTemplateA(v1, v2, op, v3){
+        let template = `<div class='row justify-content-center mb-1'>${getNo()}.` 
+        + `<div class='col-4 border border-secondary d-flex align-items-center justify-content-end'>`
+        + `<span>${v1} ${op} ${v2} =</span></div>`
+        + `<div class='col-6'><div class='input-group'><input class='form-control keyin' type='text' data-answer='${v3}'/>`
+        + `<span class='answer invisible input-group-text w-50'>${v3}</span>`
+        + `</div></div></div>`;
+        return template;
+    }
+    function equationTemplateADivide(v1, v2, op, v3, v4){
+        let template = `<div class='row mb-1'>${getNo()}.` 
+        + `<div class='col-4 border border-secondary d-flex align-items-center justify-content-end'>`
+        + `<span>${v1} ${op} ${v2} =</span></div>`
+        + `<div class='col-6'>`
+        + `<div class='row'><div class='input-group'>`
+        + `<span class='input-group-text'>商數</span><input class='form-control keyin' type='text' data-answer='${v3}'/>`
+        + `<span class='answer invisible input-group-text w-50'>${v3}</span></div></div>`
+        + `<div class='row'><div class='input-group'>` 
+        + `<span class='input-group-text'>餘數</span><input class='form-control keyin' type='text' data-answer='${v4}'/>`
+        + `<span class='answer invisible input-group-text w-50'>${v4}</span></div></div>`
+        + `</div></div>`;
+        return template;
+    }
+    var no = 0;
+    function getNo (){
+        return (no+"").padStart(3, "0");
+    }
+    $(document).ready(function(){
+        $("#mainForm").submit(function(e){
+            e.preventDefault();
+            let total = $("#numOfQuestion").val();
+            let rowCnt = total / 2;
+            let colCnt = 2;
+            let len = $("#lenOfVariable").val();
+            let sizeArray = new Array($("input[name='qStyle']").length);
+            let typeSize = $("input[name='qStyle']:checked").length;
+            
+            //check
+            if(typeSize == 0){
+                alert('請選擇題目類型');
+                return;
+            }
+            
+            let remaining = total % typeSize;
+            $("input[name='qStyle']:checked").each(function(idx, e){
+                sizeArray[$(e).val()] = 0;
+                if(remaining > 0){
+                    sizeArray[$(e).val()] += 1;
+                    remaining--;
+                }
+                sizeArray[$(e).val()] += parseInt(total / typeSize);
+            });
+            
+            $("#layout").html(genRow(rowCnt, colCnt, sizeArray, len));
+        });
+        $("#chkAnswer").on("change", function(){
+            if($("#chkAnswer").prop("checked") == true){
+                $(".answer").removeClass('invisible');
+                $(".keyin").each(function(idx, e){
+                    if($(e).attr('data-answer') == $(e).val()){
+                        $(e).addClass("border border-success");
+                    }
+                    else{
+                        $(e).addClass("border border-danger");
+                    }
+                });
+            }
+            else{
+                $(".answer").addClass('invisible');
+                $(".keyin").removeClass('border border-success border-danger');
+            }
+        });
+    });
+
+    function genRow(rowCnt, colCnt, qArray, len){
+        let row = "<div class='row'>";
+        let c = 0;
+        no = 0;
+        for(let i = 0; i< qArray.length; ++i){
+            for(let j =0; j< qArray[i]; ++j){
+                no++;
+                let a = getRandomInt(1, Math.pow(10, len)-1);
+                let b = getRandomInt(1, Math.pow(10, len)-1);
+                row += `<div class='col'>`
+                    + `${i == 0 ? genAdd(a,b): 
+                        (i == 1 ? genSubstract(a,b) :
+                        (i == 2 ? genMultiple(a,b) : genDivide(a,b)))}`
+                    +`</div>`;
+                ++c;
+                if(c % colCnt == 0){
+                    row += `</div><div class='row'>`;
+                    c = 0;
+                }
+
+            }
+        }
+        row += `</div>`;
+        return row;
+    }
+
+    function getRandomInt(min, max){
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max-min+1) + min);
+    }
+
+    function genAdd(a, b, len){
+        return equationTemplateA(a, b, "+", a + b, 1);
+    }
+
+    function genSubstract(a, b, len){
+        if(a < b) return genSubstract(b, a, len);
+        return equationTemplateA(a, b, "-", a - b);
+    }
+
+    function genMultiple(a, b, len){
+        return equationTemplateA(a, b, "*", a * b);
+    }
+
+    function genDivide(a, b, len){
+        return equationTemplateADivide(a, b, "/", Math.floor(a / b), a % b);
+    }
+    
+</script>
