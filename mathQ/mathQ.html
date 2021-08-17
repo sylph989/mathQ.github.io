@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,48 +14,51 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
 <body>
-    <form id="mainForm" style="margin:10px 10px;" class="d-print-none">
-        <div class="input-group w-50">
-            <span class="input-group-text">請選擇題數 </span>
-            <select id="numOfQuestion" class="form-select" aria-label="Default Select">
-                <option value="10" selected>10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-            </select>
-        </div>
-        <br>
-        <div class="input-group w-50">
-            <span class="input-group-text">請選擇位數 </span>
-            <select id="lenOfVariable" class="form-select" aria-label="Default Select">
-                <option value="1" selected>1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-            </select>
-        </div>
-        <br>
-        <div class="input-group">
-            <span class="input-group-text">選擇題型 </span>
-            <input id="add" class="form-check-input" type="checkbox" name="qStyle" value="0">
-            <label for="add" class="form-check-label">加法</label>
-            <input id="minus" class="form-check-input" type="checkbox" name="qStyle" value="1">
-            <label for="minus" class="form-check-label">減法</label>
-            <input id="multiple" class="form-check-input" type="checkbox" name="qStyle" value="2">
-            <label for="multiple" class="form-check-label">乘法</label>
-            <input id="divide" class="form-check-input" type="checkbox" name="qStyle" value="3">
-            <label for="divide" class="form-check-label">除法</label>
-        </div>
-        <br>
-        <div class="row justify-content-center">
-            <div class="col-4">
-                <button type="submit" class="btn btn-primary text-center" style="width:100px;">送出</button>
-                <input type="checkbox" id="chkAnswer" name="chkAnswer" class="form-check-input">
-                <label for="chkAnswer" class="form-check-label">答案?</label> 
+    <div class="container d-flex flex-column w-50 justify-content-center d-print-none">
+        <form id="mainForm" style="margin:10px 10px;">
+            <div class="input-group ">
+                <span class="input-group-text">請選擇題數 </span>
+                <select id="numOfQuestion" class="form-select" aria-label="Default Select">
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                </select>
             </div>
-        </div>
-        
-    </form>
+            <br>
+            <div class="input-group ">
+                <span class="input-group-text">請選擇位數 </span>
+                <select id="lenOfVariable" class="form-select" aria-label="Default Select">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-text">選擇題型 </span>
+                <input id="add" class="form-check-input" type="checkbox" name="qStyle" value="0">
+                <label for="add" class="form-check-label">加法</label>
+                <input id="minus" class="form-check-input" type="checkbox" name="qStyle" value="1">
+                <label for="minus" class="form-check-label">減法</label>
+                <input id="multiple" class="form-check-input" type="checkbox" name="qStyle" value="2">
+                <label for="multiple" class="form-check-label">乘法</label>
+                <input id="divide" class="form-check-input" type="checkbox" name="qStyle" value="3">
+                <label for="divide" class="form-check-label">除法</label>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary text-center" style="width:100px;">送出</button>
+                    <input type="checkbox" id="chkAnswer" name="chkAnswer" class="form-check-input">
+                    <label for="chkAnswer" class="form-check-label">答案?</label> 
+                </div>
+            </div>
+            
+        </form>
+    </div>
+    
     <div id="layout" class="container">
 
     </div>
