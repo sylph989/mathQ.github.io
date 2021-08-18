@@ -1,0 +1,7 @@
+resource/css/bootstrap*
+
+resource/css/*.map
+
+resource/js/bootstrap*
+
+resource/js/jquery-*

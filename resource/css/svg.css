@@ -1,0 +1,25 @@
+.fa-times-circle{
+    width:30px;
+    height:30px;
+    display: block;
+    text-indent: -9999px;
+    background: url('../svg/times-circle-solid.svg');
+    background-size: 30px 30px;
+}
+
+.fa-check-circle{
+    width:30px;
+    height:30px;
+    display: block;
+    text-indent: -9999px;
+    background: url('../svg/check-circle-solid.svg');
+    background-size: 30px 30px;
+}
+
+.wrong{
+    color: red;
+}
+
+.correct{
+    color:green;
+}
