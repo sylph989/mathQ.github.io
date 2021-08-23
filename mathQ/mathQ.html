@@ -15,17 +15,26 @@
     <link href="../resource/css/svg.css" rel="stylesheet">
     <style>
         .addon{
-            max-width: 25%;
-            min-width: 25%;
+            max-width: 30%;
         }
-
+        .keyin{
+            color: #000;
+        }
         .answer{
             max-width: 40%;
             min-width: 40%;
         }
+        @media print{
+            @page{
+                margin-bottom: 0mm;
+            }
+            .addon{
+                max-width: 40%;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <div class="container d-flex flex-column w-50 justify-content-center d-print-none">
         <form id="mainForm" style="margin:10px 10px;">
             <div class="input-group ">
@@ -93,36 +102,45 @@
         </form>
     </div>
     
-    <div id="layout" class="container">
+    <div id="layout" class="container mt-2">
 
     </div>
+    <footer class="mt-auto mb-2">
+        <div id="layout_ans" class="container d-none d-print-block"></div>
+    </footer>
 </body>
 </html>
 
 <script>
     function equationTemplateA(v1, v2, op, v3){
-        let template = `<div class='row justify-content-center mb-1 question-row'>${getNo()}.<div class='col-auto d-print-none'><i class='answer-svg'></i></div>` 
-        + `<div class='col-3 border border-secondary d-flex align-items-center justify-content-end'>`
+        let template = `<div class='row justify-content-center mb-1 question-row'><div class='col-auto d-print-none'><i class='answer-svg'></i></div>${getNo()}.` 
+        + `<div class='col-4 border border-secondary d-flex align-items-center justify-content-end'>`
         + `<span class='question'>${v1} ${op} ${v2} =</span></div>`
-        + `<div class='col-7'><div class='input-group'><input class='form-control keyin ' type='text' data-answer='${v3}'/>`
-        + `<span class='answer invisible input-group-text addon'>${v3}</span>`
+        + `<div class='col-6'><div class='input-group'><input class='form-control keyin ' type='text' data-answer='${v3}'/>`
+        + `<span class='answer d-none input-group-text addon'>${v3}</span>`
         + `</div></div></div>`;
         return template;
     }
     function equationTemplateADivide(v1, v2, op, v3, v4){
-        let template = `<div class='row justify-content-center mb-1 question-row'>${getNo()}.<div class='col-auto d-print-none'><i class='answer-svg'></i></div>` 
-        + `<div class='col-3 border border-secondary d-flex align-items-center justify-content-end'>`
+        let template = `<div class='row justify-content-center mb-1 question-row'><div class='col-auto d-print-none'><i class='answer-svg'></i></div>${getNo()}.` 
+        + `<div class='col-4 border border-secondary d-flex align-items-center justify-content-end'>`
         + `<span class='question'>${v1} ${op} ${v2} =</span></div>`
-        + `<div class='col-7 col-answer-root'>`
+        + `<div class='col-6 col-answer-root'>`
         + `<div class='row'><div class='input-group'>`
         + `<span class='input-group-text addon'>商數</span><input class='form-control keyin-quotient ' type='text' data-answer='${v3}'/>`
-        + `<span class='answer invisible input-group-text addon'>${v3}</span></div></div>`
+        + `<span class='answer d-none input-group-text addon'>${v3}</span></div></div>`
         + `<div class='row'><div class='input-group'>` 
         + `<span class='input-group-text addon'>餘數</span><input class='form-control keyin-remaining ' type='text' data-answer='${v4}'/>`
-        + `<span class='answer invisible input-group-text addon'>${v4}</span></div></div>`
+        + `<span class='answer d-none input-group-text addon'>${v4}</span></div></div>`
         + `</div></div>`;
         return template;
     }
+    function answerTemplate(no, ans){
+        let template = `<b>(${no}). ${ans}&nbsp;</b>`;
+        return template;
+    }
+
+
     var no = 0;
     function getNo (){
         return (no+"").padStart(2, "0");
@@ -153,7 +171,9 @@
                 sizeArray[$(e).val()] += parseInt(total / typeSize);
             });
             bShowAnswer = true;
-            $("#layout").html(genRow(rowCnt, colCnt, sizeArray, len));
+            let generatedRow = genRow(rowCnt, colCnt, sizeArray, len);
+            $("#layout").html(generatedRow["row"]);
+            $("#layout_ans").html(generatedRow["row_ans"]);
         });
         var bShowAnswer = false;
         $("#btnShowAnswer").on("click", function(){
@@ -161,7 +181,7 @@
             $(".answer-svg").removeClass("fa-times-circle fa-check-circle correct wrong");
             if(bShowAnswer){
                 //
-                $(".answer").removeClass('invisible');
+                $(".answer").removeClass('d-none');
                 $(".keyin").each(function(idx, e){
                     let row = $(e).parent().parent().parent();
                     let img = $(row.children()[0]).children("i");
@@ -191,7 +211,7 @@
                 });
             }
             else{
-                $(".answer").addClass('invisible');
+                $(".answer").addClass('d-none');
             }
             bShowAnswer = !bShowAnswer;
             
@@ -205,6 +225,7 @@
 
     function genRow(rowCnt, colCnt, qArray, len){
         let row = "<div class='row'>";
+        let row_ans = "<div class='row'>";
         let c = 0;
         no = 0;
         for(let i = 0; i< qArray.length; ++i){
@@ -223,10 +244,16 @@
                     c = 0;
                 }
 
+                //ans
+                let ans = i == 0 ? a+b: 
+                        (i == 1 ? a-b :
+                        (i == 2 ? a*b : `${Math.floor(a/b)}, ${a%b}`));
+                row_ans += `<div class='col-2'>${answerTemplate(no, ans)}</div>`;
             }
         }
         row += `</div>`;
-        return row;
+        row_ans += `</div>`;
+        return {row, row_ans};
     }
 
     function getRandomInt(min, max){
