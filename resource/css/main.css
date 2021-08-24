@@ -1,0 +1,25 @@
+.addon{
+    max-width: 30%;
+}
+.keyin{
+    color: #000;
+}
+.answer{
+    max-width: 40%;
+    min-width: 40%;
+}
+
+@media print{
+    @page{
+        margin-bottom: 0mm;
+    }
+    .addon{
+        max-width: 40%;
+    }
+
+    .avoid-break{
+        -webkit-column-break-inside: avoid; /*chrome, safari, opera*/
+        page-break-inside: avoid; /*fire fox*/
+        break-inside: avoid; /*ie 10+*/
+    }
+}
